@@ -9,12 +9,3 @@ $ qmake Instancing.pro
 $ make
 $ ./instancing
 ```
-
-## Documentation
-Build the simple documentation with **doxygen**.
-```
-$ doxygen Doxyfile
-$ google-chrome docs/html/index.html
-```
-
-
