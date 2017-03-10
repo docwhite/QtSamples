@@ -21,7 +21,7 @@ public:
   void generateInstancesData();
 
 private:
-  std::vector<GLfloat> m_quadData;
+  std::vector<GLfloat> m_sphereData;
   std::vector<GLfloat> m_instancesData;
 
   QOpenGLBuffer m_quad_vbo;

@@ -1,13 +1,10 @@
 #version 450 core
 
-in vec2 position;
+in vec3 position;
 in vec3 color;
 
-in vec3 instance;  // x: positionX, y: positionY, z: radius
-
-out vec3 vCol;
+in vec4 instance;  // x: positionX, y: positionY, z: positionZ, w: radius
 
 void main(void) {
-    vCol = color;
-    gl_Position = vec4(instance.z * position + instance.xy, 0.0, 1.0);
+    gl_Position = vec4(instance.w * position + instance.xyz, 1.0);
 }
