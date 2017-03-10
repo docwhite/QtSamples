@@ -9,7 +9,7 @@
 void pushTriangle(float *v1, float *v2, float *v3, std::vector<GLfloat>& _data) {
   _data.push_back(v1[0]); _data.push_back(v1[1]); _data.push_back(v1[2]); // v1
   _data.push_back(v2[0]); _data.push_back(v2[1]); _data.push_back(v2[2]); // v2
-  _data.push_back(v3[0]); _data.push_back(v3[1]); _data.push_back(v3[2]); //v3
+  _data.push_back(v3[0]); _data.push_back(v3[1]); _data.push_back(v3[2]); // v3
 }
 
 void subdivide(float *v1, float *v2, float *v3, long depth, std::vector<GLfloat>& _data) {
@@ -54,7 +54,7 @@ Scene::~Scene()
   delete m_vao;
 }
 
-void Scene::generateQuadData() {
+void Scene::generateSphereData() {
 
   m_sphereData.clear();
 
@@ -96,7 +96,7 @@ void Scene::initialize()
   m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/particles.frag");
   m_program->link();
 
-  generateQuadData();
+  generateSphereData();
   generateInstancesData();
 
   // Create VAO
@@ -132,13 +132,14 @@ void Scene::initialize()
   m_vao->release();
 
   glViewport(0, 0, window()->width(), window()->height());
+  glEnable(GL_DEPTH_TEST);
   glClearColor(0.0f,0.0f, 0.0f, 1.0f);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void Scene::paint()
 {
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   m_program->bind();
   m_vao->bind();
 

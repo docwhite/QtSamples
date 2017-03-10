@@ -17,7 +17,7 @@ public:
   ~Scene();
   void initialize();
   void paint();
-  void generateQuadData();
+  void generateSphereData();
   void generateInstancesData();
 
 private:
