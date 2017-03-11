@@ -1,0 +1,3 @@
+[submodule "QtOpenGLBoilerPlate"]
+	path = QtOpenGLBoilerPlate
+	url = git@github.com:docwhite/QtOpenGLBoilerplate.git
