@@ -1,7 +1,12 @@
 #version 330 core
 
-out vec4 fColor;
+in vec3 vPosition;
+in vec3 vNormal;
+
+layout (location = 0) out vec3 gPositionPass;  // Color Attachment 0
+layout (location = 1) out vec3 gNormalPass;    // Color Attachment 1
 
 void main() {
-    fColor = vec4(1.0);
+    gPositionPass = vPosition;
+    gNormalPass = vNormal;
 }

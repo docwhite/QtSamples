@@ -1,6 +1,8 @@
 TARGET = ssao
 TEMPLATE = app
 
+CONFIG += c++11
+
 QT += core gui
 
 CONFIG += c++11

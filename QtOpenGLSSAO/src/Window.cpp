@@ -50,3 +50,9 @@ void Window::resizeGL(int _w, int _h)
 {
   qDebug("New window size: %d, %d", _w, _h);
 }
+
+void Window::keyPressEvent(QKeyEvent *ev)
+{
+  if (scene())
+    scene()->keyPressEvent(ev);
+}

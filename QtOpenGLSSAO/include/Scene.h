@@ -8,63 +8,49 @@
 #define SCENE_H
 
 // Qt
+#include <QMatrix4x4>
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
+#include <QOpenGLFramebufferObject>
 
 // Project
 #include "AbstractScene.h"
 #include "Window.h"
 
-////////////////////////////////////////////////////////////////////////////////
-/// @class Scene
-/// @brief This is an example on how to subclass the AbstractScene and use your
-/// OpenGL commands.
-///
-/// In order to create your scene you need to subclass the AbstractScene through
-/// public inheritance and write initialize() and paint(). Both are virtual, but
-/// the paint() is pure virtual, initialize() is not.
-///
-/// There is just one requirement, AbstractScene::initialize() method must be
-/// called from the Scene::initialize() in order to initialize the OpenGL
-/// functions, that saves you from having to do it. Just make sure you call
-/// the superclass method and you are good to go.
-////////////////////////////////////////////////////////////////////////////////
 class Scene : public AbstractScene
 {
 
 public:
-  //////////////////////////////////////////////////////////////////////////////
-  /// @brief Constructor.
-  /// @param[in] _window The OpenGL window to associate the scene with.
-  //////////////////////////////////////////////////////////////////////////////
   Scene(Window *_window);
-
-  //////////////////////////////////////////////////////////////////////////////
-  /// @brief Destructor. Do all the OpenGL cleanup here.
-  //////////////////////////////////////////////////////////////////////////////
   ~Scene();
-
-  //////////////////////////////////////////////////////////////////////////////
-  /// @brief All the OpenGL initialization should be done in this method.
-  //////////////////////////////////////////////////////////////////////////////
   void initialize();
-
-  //////////////////////////////////////////////////////////////////////////////
-  /// @brief Gets called everytime we want to draw the scene.
-  //////////////////////////////////////////////////////////////////////////////
   void paint();
 
 private:
-  QOpenGLBuffer m_quad_vbo;
+  float m_keepSpinning;
+
+  QOpenGLFramebufferObject* m_gbuffer_fbo;
+  QOpenGLFramebufferObject* m_ssao_fbo;
+  QOpenGLFramebufferObject* m_blur_fbo;
+
+  QMatrix4x4 m_M;
+  QMatrix4x4 m_V;
+  QMatrix4x4 m_P;
+
   QOpenGLShaderProgram* m_quad_program;
   QOpenGLVertexArrayObject m_quad_vao;
+  QOpenGLBuffer m_quad_vbo;
 
-  QOpenGLBuffer m_geom_vbo;
   QOpenGLShaderProgram* m_geom_program;
   QOpenGLVertexArrayObject m_geom_vao;
+  QOpenGLBuffer m_geom_vbo;
+  QOpenGLBuffer m_geom_ebo;
+  std::vector<GLuint> m_geom_indices;
+  std::vector<GLfloat> m_geom_vertices;
 
-
+public slots:
+  void keyPressEvent(QKeyEvent* ev) override;
 };
 
 #endif // SCENE_H

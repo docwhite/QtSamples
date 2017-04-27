@@ -4,6 +4,5 @@
         <file alias="geom.vert">resources/shaders/geom.vert</file>
         <file alias="quad.frag">resources/shaders/quad.frag</file>
         <file alias="quad.vert">resources/shaders/quad.vert</file>
-        <file alias="nanosuit">resources/models/nanosuit.obj</file>
     </qresource>
 </RCC>

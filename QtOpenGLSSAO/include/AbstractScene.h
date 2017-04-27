@@ -71,6 +71,9 @@ private:
   //////////////////////////////////////////////////////////////////////////////
   QOpenGLWindow *m_window = nullptr;
 
+public slots:
+  virtual void keyPressEvent(QKeyEvent* ev) = 0;
+
 };
 
 #endif // ABSTRACTSCENE_H
