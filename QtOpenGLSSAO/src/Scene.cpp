@@ -4,6 +4,12 @@
 /// @version 0.0.1
 ////////////////////////////////////////////////////////////////////////////////
 
+// Third Party
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+
 // Project
 #include "Scene.h"
 
@@ -22,7 +28,14 @@ void Scene::initialize()
   AbstractScene::initialize();
 
   m_quad_program = new QOpenGLShaderProgram();
+  m_quad_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/quad.vert");
+  m_quad_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/quad.frag");
+  m_quad_program->link();
+
   m_geom_program = new QOpenGLShaderProgram();
+  m_geom_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/geom.vert");
+  m_geom_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/geom.frag");
+  m_geom_program->link();
 }
 
 void Scene::paint()

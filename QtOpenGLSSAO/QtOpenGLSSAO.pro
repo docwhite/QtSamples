@@ -24,13 +24,25 @@ HEADERS += \
     include/Window.h
 
 OTHER_FILES += \
-    shaders/geometry.vert \
-    shaders/geometry.frag \
-    shaders/quad.vert \
-    shaders/quad.frag
+    resources/shaders/quad.vert \
+    resources/shaders/quad.frag
 
 OTHER_FILES += \
     .gitignore \
     Doxyfile \
-    Mainpage.dox \
     README.md
+
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
+
+win32 {
+    INCLUDEPATH += "$$PWD/../3rdparty/Assimp/include"
+    LIBS += -L"$$PWD/../3rdparty/Assimp/lib" -l"assimp-vc140-mt"
+    LIBS += -L"$$PWD/../3rdparty/Assimp/bin"
+}
+
+RESOURCES += \
+    resources.qrc
+
+DISTFILES += \
+    resources/shaders/geom.frag \
+    resources/shaders/geom.vert
