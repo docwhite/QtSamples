@@ -18,7 +18,9 @@ SOURCES += \
 OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
 
-INCLUDEPATH += include
+INCLUDEPATH += \
+    include \
+    $$PWD/../3rdparty/include
 
 HEADERS += \
     include/AbstractScene.h \
@@ -37,9 +39,12 @@ OTHER_FILES += \
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 win32 {
-    INCLUDEPATH += "$$PWD/../3rdparty/Assimp/include"
-    LIBS += -L"$$PWD/../3rdparty/Assimp/lib" -l"assimp-vc140-mt"
-    LIBS += -L"$$PWD/../3rdparty/Assimp/bin"
+    LIBS += -L"$$PWD/../3rdparty/windows/Assimp/lib" -l"assimp-vc140-mt"
+    LIBS += -L"$$PWD/../3rdparty/windows/Assimp/bin"
+}
+
+macx {
+    LIBS += -L"$$PWD/../3rdparty/mac/Assimp/lib" -l"assimp"
 }
 
 RESOURCES += \
