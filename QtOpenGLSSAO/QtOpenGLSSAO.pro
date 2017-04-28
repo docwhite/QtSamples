@@ -39,12 +39,12 @@ OTHER_FILES += \
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 win32 {
-    LIBS += -L"$$PWD/../3rdparty/windows/Assimp/lib" -l"assimp-vc140-mt"
-    LIBS += -L"$$PWD/../3rdparty/windows/Assimp/bin"
+    LIBS += -L$$PWD/../3rdparty/windows/Assimp/lib -lassimp-vc140-mt
+    LIBS += -L$$PWD/../3rdparty/windows/Assimp/bin
 }
 
 macx {
-    LIBS += -L"$$PWD/../3rdparty/mac/Assimp/lib" -l"assimp"
+    LIBS += -L$$PWD/../3rdparty/mac/Assimp/lib -lassimp
 }
 
 RESOURCES += \
