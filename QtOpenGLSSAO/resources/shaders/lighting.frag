@@ -1,17 +1,19 @@
 #version 330 core
 
-uniform int pass;
-uniform sampler2D tPosition;
-uniform sampler2D tNormal;
+out vec4 fColor;
 
 in vec2 vTexCoords;
 
-out vec4 fColor;
+uniform int pass;
+uniform sampler2D tPosition;
+uniform sampler2D tNormal;
+uniform sampler2D tSSAO;
 
 void main() {
     vec3 color = vec3(0.0);
-    vec3 position = texture2D(tPosition, vTexCoords).rgb;
-    vec3 normal = texture2D(tNormal, vTexCoords).rgb;
+    vec3 position = texture(tPosition, vTexCoords).rgb;
+    vec3 normal = texture(tNormal, vTexCoords).rgb;
+    float occlusion = texture(tSSAO, vTexCoords).r;
 
     switch(pass) {
         case 0:
@@ -21,7 +23,7 @@ void main() {
           color = normal;
           break;
         case 2:
-          color = vec3(position.z);
+          color = vec3(occlusion);
         default:
           break;
 

@@ -13,6 +13,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLFramebufferObject>
+#include <QOpenGLTexture>
 
 // Project
 #include "AbstractScene.h"
@@ -28,26 +29,39 @@ public:
   void paint();
 
 private:
-  float m_keepSpinning;
-
   QOpenGLFramebufferObject* m_gbuffer_fbo;
   QOpenGLFramebufferObject* m_ssao_fbo;
   QOpenGLFramebufferObject* m_blur_fbo;
+
+  QOpenGLTexture* m_position_texture;
+  QOpenGLTexture* m_normal_texture;
+  QOpenGLTexture* m_occlusion_texture;
+  QOpenGLTexture* m_blurred_occlusion_texture;
+
+  QOpenGLShaderProgram* m_geom_program;
+  QOpenGLShaderProgram* m_ssao_program;
+  QOpenGLShaderProgram* m_blur_program;
+  QOpenGLShaderProgram* m_lighting_program;
+
+  QOpenGLVertexArrayObject* m_quad_vao;
+  QOpenGLBuffer m_quad_vbo;
+
+  QOpenGLVertexArrayObject* m_geom_vao;
+  QOpenGLBuffer m_geom_vbo;
+  QOpenGLBuffer m_geom_ebo;
+  std::vector<GLuint> m_geom_indices;
+  std::vector<GLfloat> m_geom_vertices;
+
+  float m_keepSpinning;
 
   QMatrix4x4 m_M;
   QMatrix4x4 m_V;
   QMatrix4x4 m_P;
 
-  QOpenGLShaderProgram* m_quad_program;
-  QOpenGLVertexArrayObject m_quad_vao;
-  QOpenGLBuffer m_quad_vbo;
+  QOpenGLTexture* m_noiseTexture;
 
-  QOpenGLShaderProgram* m_geom_program;
-  QOpenGLVertexArrayObject m_geom_vao;
-  QOpenGLBuffer m_geom_vbo;
-  QOpenGLBuffer m_geom_ebo;
-  std::vector<GLuint> m_geom_indices;
-  std::vector<GLfloat> m_geom_vertices;
+  std::vector<QVector3D> m_ssao_kernel;
+
 
 public slots:
   void keyPressEvent(QKeyEvent* ev) override;
