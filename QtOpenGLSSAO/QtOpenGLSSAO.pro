@@ -3,7 +3,7 @@ TEMPLATE = app
 
 CONFIG += c++11
 
-QT += core gui
+QT += core gui widgets
 
 CONFIG += c++11
 CONFIG -= app_bundle
@@ -12,7 +12,8 @@ SOURCES += \
     src/main.cpp \
     src/AbstractScene.cpp \
     src/Scene.cpp \
-    src/Window.cpp
+    src/Window.cpp \
+    src/Panel.cpp
 
 
 OBJECTS_DIR = build/obj
@@ -25,7 +26,8 @@ INCLUDEPATH += \
 HEADERS += \
     include/AbstractScene.h \
     include/Scene.h \
-    include/Window.h
+    include/Window.h \
+    include/Panel.h
 
 OTHER_FILES += \
     resources/shaders/quad.vert \
