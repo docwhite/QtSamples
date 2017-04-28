@@ -7,5 +7,6 @@ in vec2 vTexCoords;
 uniform sampler2D tInputSSAO;
 
 void main() {
-    fColor = 0.9;
+    float unblurredSSAO = texture(tInputSSAO, vTexCoords).r;
+    fColor = unblurredSSAO;
 }
