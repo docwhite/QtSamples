@@ -19,13 +19,22 @@
 // Project
 #include "Scene.h"
 
+const float DELTA = 0.5f;
+
 float lerp(float a, float b, float f)
 {
     return a + f * (b - a);
 }
 
-Scene::Scene(Window *_window) : AbstractScene(_window)
+Scene::Scene(Window *_window)
+    : AbstractScene(_window)
+  , m_eye(QVector3D(0,0,5))
+  , m_center(QVector3D(0,0,0))
+  , m_keepSpinning(true)
 {
+  m_ssao_radius_range = std::make_pair(0.01f, 0.9f);
+  m_ssao_bias_range = std::make_pair(0.00001f, 0.09f);
+  m_kernel_size_range = std::make_pair(32, 96);
 }
 
 Scene::~Scene()
@@ -44,7 +53,7 @@ void Scene::initialize()
   // Import mesh data //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
   Assimp::Importer importer;
-  const aiScene* scene = importer.ReadFile("../assets/models/spheres.obj", 0);
+  const aiScene* scene = importer.ReadFile("../assets/models/cells.obj", aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
   for (size_t i = 0; i < scene->mNumMeshes; i++)
   {
@@ -74,8 +83,9 @@ void Scene::initialize()
   m_M.setToIdentity();
   m_V.setToIdentity();
   m_P.setToIdentity();
-  m_P.perspective(45.0f, 1.0f, 0.01f, 30.0f);
-  m_V.translate(0,0,-5);
+  m_P.perspective(45.0f, 1.0f, 0.1f, 50.0f);
+  m_M.scale(0.2);
+  m_V.lookAt(m_eye, m_center, QVector3D(0,1,0));
 
   //////////////////////////////////////////////////////////////////////////////
   // Shader compilation and linking ////////////////////////////////////////////
@@ -330,7 +340,10 @@ void Scene::initialize()
   m_lighting_program->setUniformValue("tNormal"  , 1);
   m_lighting_program->setUniformValue("tSSAO"  , 2);
   m_lighting_program->release();
-
+  setSSAORadius(50);
+  setSSAOBias(0);
+  setSSAOKernelSize(64);
+  setSSAOBlurAmount(2);
   //////////////////////////////////////////////////////////////////////////////
   // OpenGL Initialization /////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
@@ -422,37 +435,49 @@ void Scene::keyPressEvent(QKeyEvent *ev)
   switch(ev->key())
   {
     case Qt::Key_Left:
-      m_V.translate(0.1f, 0.0f, 0.0f);
+      m_eye.setX(m_eye.x() - DELTA);
+      m_V.setToIdentity();
+      m_V.lookAt(m_eye, m_center, QVector3D(0,1,0));
       m_geom_program->bind();
       m_geom_program->setUniformValue("V", m_V);
       m_geom_program->release();
       break;
     case Qt::Key_Right:
-      m_V.translate(-0.1f, 0.0f, 0.0f);
+      m_eye.setX(m_eye.x() + DELTA);
+      m_V.setToIdentity();
+      m_V.lookAt(m_eye, m_center, QVector3D(0,1,0));
       m_geom_program->bind();
       m_geom_program->setUniformValue("V", m_V);
       m_geom_program->release();
       break;
     case Qt::Key_Up:
-      m_V.translate(0.0f, 0.0f, 0.1f);
+      m_eye.setZ(m_eye.z() - DELTA);
+      m_V.setToIdentity();
+      m_V.lookAt(m_eye, m_center, QVector3D(0,1,0));
       m_geom_program->bind();
       m_geom_program->setUniformValue("V", m_V);
       m_geom_program->release();
       break;
     case Qt::Key_Down:
-      m_V.translate(0.0f, 0.0f, -0.1f);
+      m_eye.setZ(m_eye.z() + DELTA);
+      m_V.setToIdentity();
+      m_V.lookAt(m_eye, m_center, QVector3D(0,1,0));
       m_geom_program->bind();
       m_geom_program->setUniformValue("V", m_V);
       m_geom_program->release();
       break;
     case Qt::Key_W:
-      m_V.translate(0.0f, -0.1f, 0.0f);
+    m_eye.setY(m_eye.y() + DELTA);
+    m_V.setToIdentity();
+    m_V.lookAt(m_eye, m_center, QVector3D(0,1,0));
       m_geom_program->bind();
       m_geom_program->setUniformValue("V", m_V);
       m_geom_program->release();
       break;
     case Qt::Key_S:
-      m_V.translate(0.0f, 0.1f, 0.0f);
+    m_eye.setY(m_eye.y() - DELTA);
+    m_V.setToIdentity();
+    m_V.lookAt(m_eye, m_center, QVector3D(0,1,0));
       m_geom_program->bind();
       m_geom_program->setUniformValue("V", m_V);
       m_geom_program->release();
@@ -477,4 +502,36 @@ void Scene::keyPressEvent(QKeyEvent *ev)
     default:
       break;
   }
+}
+
+void Scene::setSSAORadius(int _value)
+{
+  m_ssao_radius = lerp(m_ssao_radius_range.first, m_ssao_radius_range.second, (float)_value/(float)100);
+  qDebug("Radius: %f", m_ssao_radius);
+  m_ssao_program->bind();
+  m_ssao_program->setUniformValue("radius", m_ssao_radius);
+  m_ssao_program->release();
+}
+
+void Scene::setSSAOBias(int _value)
+{
+  m_ssao_bias = lerp(m_ssao_bias_range.first, m_ssao_bias_range.second, (float)_value/(float)100);
+  qDebug("Bias: %f", m_ssao_bias);
+  m_ssao_program->bind();
+  m_ssao_program->setUniformValue("bias", m_ssao_bias);
+  m_ssao_program->release();
+
+}
+
+void Scene::setSSAOKernelSize(int _value)
+{
+  qDebug("%d", _value);
+
+}
+
+void Scene::setSSAOBlurAmount(int _value)
+{
+  m_blur_program->bind();
+  m_blur_program->setUniformValue("blurAmount", _value);
+  m_blur_program->release();
 }

@@ -8,5 +8,5 @@ layout (location = 1) out vec3 gNormalPass;
 
 void main() {
     gPositionPass = vPosition;
-    gNormalPass = vNormal;
+    gNormalPass = normalize(vNormal);
 }

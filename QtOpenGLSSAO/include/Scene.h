@@ -15,11 +15,14 @@
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLTexture>
 
+// Standard
+#include <utility>
+
 // Project
 #include "AbstractScene.h"
 #include "Window.h"
 
-class Scene : public AbstractScene
+class Scene : public AbstractScene, public QObject
 {
 
 public:
@@ -29,6 +32,14 @@ public:
   void paint();
 
 private:
+  GLfloat m_ssao_radius;
+  std::pair<float, float> m_ssao_radius_range;
+  GLfloat m_ssao_bias;
+  std::pair<float, float> m_ssao_bias_range;
+  GLuint m_ssao_kernelSize;
+  std::pair<int, int> m_kernel_size_range;
+  GLuint m_blur_amount;
+
   QOpenGLFramebufferObject* m_gbuffer_fbo;
   QOpenGLFramebufferObject* m_ssao_fbo;
   QOpenGLFramebufferObject* m_blur_fbo;
@@ -63,9 +74,15 @@ private:
 
   std::vector<QVector3D> m_ssao_kernel;
 
+  QVector3D m_eye;
+  QVector3D m_center;
 
 public slots:
   void keyPressEvent(QKeyEvent* ev) override;
+  void setSSAORadius(int _value);
+  void setSSAOBias(int _value);
+  void setSSAOKernelSize(int _value);
+  void setSSAOBlurAmount(int _value);
 };
 
 #endif // SCENE_H

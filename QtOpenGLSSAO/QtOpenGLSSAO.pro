@@ -30,10 +30,6 @@ HEADERS += \
     include/Panel.h
 
 OTHER_FILES += \
-    resources/shaders/quad.vert \
-    resources/shaders/quad.frag
-
-OTHER_FILES += \
     .gitignore \
     Doxyfile \
     README.md
@@ -56,7 +52,3 @@ unix:!macx {
 
 RESOURCES += \
     resources.qrc
-
-DISTFILES += \
-    resources/shaders/geom.frag \
-    resources/shaders/geom.vert

@@ -5,16 +5,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 // Qt
-#include <QGuiApplication>
+#include <QObject>
+#include <QApplication>
 #include <QPropertyAnimation>
 
 // Project
 #include "Scene.h"
 #include "Window.h"
+#include "Panel.h"
 
 int main(int argc, char *argv[])
 {
-  QGuiApplication app(argc, argv);
+  QApplication app(argc, argv);
+
+  Panel panel;
+  panel.show();
+
 
   Window window;
   QSurfaceFormat fmt;
@@ -26,6 +32,11 @@ int main(int argc, char *argv[])
 
   Scene scene(&window);
   window.setScene(&scene);
+
+  QObject::connect(panel.m_radius_slider, &QSlider::valueChanged, &scene, &Scene::setSSAORadius);
+  QObject::connect(panel.m_bias_slider, &QSlider::valueChanged, &scene, &Scene::setSSAOBias);
+  QObject::connect(panel.m_kernel_size_slider, &QSlider::valueChanged, &scene, &Scene::setSSAOKernelSize);
+  QObject::connect(panel.m_blur_amount_slider, &QSlider::valueChanged, &scene, &Scene::setSSAOBlurAmount);
 
   window.resize(720, 720);
   window.show();
