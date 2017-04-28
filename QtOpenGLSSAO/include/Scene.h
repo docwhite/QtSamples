@@ -32,6 +32,7 @@ private:
   QOpenGLFramebufferObject* m_gbuffer_fbo;
   QOpenGLFramebufferObject* m_ssao_fbo;
   QOpenGLFramebufferObject* m_blur_fbo;
+  GLuint m_blur_fbo_id;
 
   QOpenGLTexture* m_position_texture;
   QOpenGLTexture* m_normal_texture;
