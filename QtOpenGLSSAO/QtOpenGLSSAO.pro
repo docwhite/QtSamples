@@ -47,6 +47,11 @@ macx {
     LIBS += -L$$PWD/../3rdparty/mac/Assimp/lib -lassimp
 }
 
+unix:!macx {
+    LIBS += -L$$PWD/../3rdparty/linux/z -lz
+    LIBS += -L$$PWD/../3rdparty/linux/Assimp/lib -lassimp
+}
+
 RESOURCES += \
     resources.qrc
 
