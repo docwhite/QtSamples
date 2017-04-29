@@ -340,10 +340,14 @@ void Scene::initialize()
   m_lighting_program->setUniformValue("tNormal"  , 1);
   m_lighting_program->setUniformValue("tSSAO"  , 2);
   m_lighting_program->release();
-  setSSAORadius(50);
-  setSSAOBias(0);
-  setSSAOKernelSize(64);
-  setSSAOBlurAmount(2);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Call functions for initial slider values //////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  setSSAORadius(50);      // [ 1, 100]
+  setSSAOBias(0);         // [ 1, 100]
+  setSSAOKernelSize(64);  // [32,  96]
+  setSSAOBlurAmount(2);   // [ 2,   4]
 
   //////////////////////////////////////////////////////////////////////////////
   // OpenGL Initialization /////////////////////////////////////////////////////
