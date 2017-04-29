@@ -8,7 +8,7 @@ uniform sampler2D tPosition;
 uniform sampler2D tNormal;
 uniform sampler2D tTexNoise;
 
-uniform vec3 samples[256];
+uniform vec3 samples[96];
 uniform mat4 P;
 
 uniform float radius;

@@ -34,8 +34,7 @@ Scene::Scene(Window *_window)
 {
   m_ssao_radius_range = std::make_pair(0.01f, 0.9f);
   m_ssao_bias_range = std::make_pair(0.000001f, 0.009f);
-  m_kernel_size_range = std::make_pair(32, 512);
-  m_ssao_kernelSize = 128;
+  m_ssao_kernelSize = 64;
 }
 
 Scene::~Scene()
@@ -528,6 +527,7 @@ void Scene::setSSAOBias(int _value)
 void Scene::setSSAOKernelSize(int _value)
 {
   qDebug("Kernel Size: %d", _value);
+  m_ssao_kernelSize = _value;
 
   //////////////////////////////////////////////////////////////////////////////
   // SSAO kernel preparation ///////////////////////////////////////////////////
@@ -553,7 +553,6 @@ void Scene::setSSAOKernelSize(int _value)
   m_ssao_program->bind();
   m_ssao_program->setUniformValue("kernelSize", _value);
   m_ssao_program->release();
-
 }
 
 void Scene::setSSAOBlurAmount(int _value)

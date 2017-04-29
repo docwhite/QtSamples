@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
 
   Panel panel;
-  panel.show();
+
 
 
   Window window;
@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 
   window.resize(720, 720);
   window.show();
+  panel.show();
 
   return app.exec();
 }

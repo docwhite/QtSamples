@@ -37,7 +37,6 @@ private:
   GLfloat m_ssao_bias;
   std::pair<float, float> m_ssao_bias_range;
   GLuint m_ssao_kernelSize;
-  std::pair<int, int> m_kernel_size_range;
   GLuint m_blur_amount;
 
   QOpenGLFramebufferObject* m_gbuffer_fbo;
