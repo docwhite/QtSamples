@@ -7,20 +7,20 @@
 // Qt
 #include <QObject>
 #include <QApplication>
-#include <QPropertyAnimation>
 
 // Project
 #include "Scene.h"
 #include "Window.h"
 #include "Panel.h"
 
+const std::pair<float, float> ssao_radius_range = std::make_pair(0.01f, 0.9f);
+const std::pair<float, float> ssao_bias_range   = std::make_pair(0.000001f, 0.009f);
+
 int main(int argc, char *argv[])
 {
   QApplication app(argc, argv);
 
   Panel panel;
-
-
 
   Window window;
   QSurfaceFormat fmt;
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
   fmt.setSwapInterval(1);
   window.setFormat(fmt);
 
-  Scene scene(&window);
+  Scene scene(ssao_radius_range, ssao_bias_range, &window);
   window.setScene(&scene);
 
   QObject::connect(panel.m_radius_slider, &QSlider::valueChanged, &scene, &Scene::setSSAORadius);

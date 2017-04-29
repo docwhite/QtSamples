@@ -26,15 +26,17 @@ float lerp(float a, float b, float f)
     return a + f * (b - a);
 }
 
-Scene::Scene(Window *_window)
-    : AbstractScene(_window)
+Scene::Scene(
+    std::pair<float,float> _ssao_radius_range,
+    std::pair<float,float> _ssao_bias_range,
+    Window *_window)
+  : AbstractScene(_window)
+  , m_ssao_radius_range(_ssao_radius_range)
+  , m_ssao_bias_range(_ssao_bias_range)
+  , m_keepSpinning(true)
   , m_eye(QVector3D(0,0,5))
   , m_center(QVector3D(0,0,0))
-  , m_keepSpinning(true)
 {
-  m_ssao_radius_range = std::make_pair(0.01f, 0.9f);
-  m_ssao_bias_range = std::make_pair(0.000001f, 0.009f);
-  m_ssao_kernelSize = 64;
 }
 
 Scene::~Scene()
@@ -373,7 +375,7 @@ void Scene::paint()
     glDisable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT);
     m_ssao_program->bind();
-    for (uint i = 0; i < m_ssao_kernelSize; ++i)
+    for (uint i = 0; i < 64; ++i)
     {
       char buffer [12];
       sprintf(buffer, "samples[%d]", i);
@@ -507,35 +509,20 @@ void Scene::keyPressEvent(QKeyEvent *ev)
 
 void Scene::setSSAORadius(int _value)
 {
-  m_ssao_radius = lerp(m_ssao_radius_range.first, m_ssao_radius_range.second, (float)_value/(float)100);
   qDebug("Radius: %f", m_ssao_radius);
+  m_ssao_radius = lerp(m_ssao_radius_range.first, m_ssao_radius_range.second, (float)_value/(float)100);
   m_ssao_program->bind();
   m_ssao_program->setUniformValue("radius", m_ssao_radius);
   m_ssao_program->release();
 }
 
-void Scene::setSSAOBias(int _value)
-{
-  m_ssao_bias = lerp(m_ssao_bias_range.first, m_ssao_bias_range.second, (float)_value/(float)100);
-  qDebug("Bias: %f", m_ssao_bias);
-  m_ssao_program->bind();
-  m_ssao_program->setUniformValue("bias", m_ssao_bias);
-  m_ssao_program->release();
-
-}
-
 void Scene::setSSAOKernelSize(int _value)
 {
   qDebug("Kernel Size: %d", _value);
-  m_ssao_kernelSize = _value;
-
-  //////////////////////////////////////////////////////////////////////////////
-  // SSAO kernel preparation ///////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////
   std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0);
   std::default_random_engine generator;
   m_ssao_kernel.clear();
-  for (size_t i = 0; i < m_ssao_kernelSize; ++i)
+  for (int i = 0; i < _value; ++i)
   {
     QVector3D sample(
       randomFloats(generator) * 2.0 - 1.0,
@@ -544,7 +531,7 @@ void Scene::setSSAOKernelSize(int _value)
     );
     sample.normalize();
     sample *= randomFloats(generator);
-    float scale = (float)i/float(m_ssao_kernelSize);
+    float scale = (float)i/float(_value);
     scale = lerp(0.1f, 1.0f, scale*scale);
     sample *= scale;
     m_ssao_kernel.push_back(sample);
@@ -552,6 +539,15 @@ void Scene::setSSAOKernelSize(int _value)
 
   m_ssao_program->bind();
   m_ssao_program->setUniformValue("kernelSize", _value);
+  m_ssao_program->release();
+}
+
+void Scene::setSSAOBias(int _value)
+{
+  qDebug("Bias: %f", m_ssao_bias);
+  m_ssao_bias = lerp(m_ssao_bias_range.first, m_ssao_bias_range.second, (float)_value/(float)100);
+  m_ssao_program->bind();
+  m_ssao_program->setUniformValue("bias", m_ssao_bias);
   m_ssao_program->release();
 }
 

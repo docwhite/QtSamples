@@ -10,13 +10,10 @@
 // Qt
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLVertexArrayObject>
 #include <QOpenGLFramebufferObject>
+#include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
-
-// Standard
-#include <utility>
+#include <QOpenGLVertexArrayObject>
 
 // Project
 #include "AbstractScene.h"
@@ -24,25 +21,23 @@
 
 class Scene : public AbstractScene, public QObject
 {
-
 public:
-  Scene(Window *_window);
+  Scene(const std::pair<float,float> _ssao_radius_range, const std::pair<float,float> _ssao_bias_range, Window *_window);
   ~Scene();
-  void initialize();
-  void paint();
+
+  void initialize() override;
+  void paint() override;
+
+  const std::pair<float, float> m_ssao_radius_range;
+  const std::pair<float, float> m_ssao_bias_range;
 
 private:
   GLfloat m_ssao_radius;
-  std::pair<float, float> m_ssao_radius_range;
   GLfloat m_ssao_bias;
-  std::pair<float, float> m_ssao_bias_range;
-  GLuint m_ssao_kernelSize;
-  GLuint m_blur_amount;
 
   QOpenGLFramebufferObject* m_gbuffer_fbo;
   QOpenGLFramebufferObject* m_ssao_fbo;
   QOpenGLFramebufferObject* m_blur_fbo;
-  GLuint m_blur_fbo_id;
 
   QOpenGLTexture* m_position_texture;
   QOpenGLTexture* m_normal_texture;
@@ -60,14 +55,14 @@ private:
   QOpenGLVertexArrayObject* m_geom_vao;
   QOpenGLBuffer m_geom_vbo;
   QOpenGLBuffer m_geom_ebo;
-  std::vector<GLuint> m_geom_indices;
   std::vector<GLfloat> m_geom_vertices;
-
-  float m_keepSpinning;
+  std::vector<GLuint> m_geom_indices;
 
   QMatrix4x4 m_M;
   QMatrix4x4 m_V;
   QMatrix4x4 m_P;
+
+  float m_keepSpinning;
 
   QOpenGLTexture* m_noiseTexture;
 
@@ -79,8 +74,8 @@ private:
 public slots:
   void keyPressEvent(QKeyEvent* ev) override;
   void setSSAORadius(int _value);
-  void setSSAOBias(int _value);
   void setSSAOKernelSize(int _value);
+  void setSSAOBias(int _value);
   void setSSAOBlurAmount(int _value);
 };
 

@@ -1,6 +1,6 @@
 // Qt
-#include <QVBoxLayout>
 #include <QLabel>
+#include <QVBoxLayout>
 
 // Project
 #include "Panel.h"
