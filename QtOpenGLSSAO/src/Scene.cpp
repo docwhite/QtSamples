@@ -33,8 +33,9 @@ Scene::Scene(Window *_window)
   , m_keepSpinning(true)
 {
   m_ssao_radius_range = std::make_pair(0.01f, 0.9f);
-  m_ssao_bias_range = std::make_pair(0.00001f, 0.09f);
-  m_kernel_size_range = std::make_pair(32, 96);
+  m_ssao_bias_range = std::make_pair(0.000001f, 0.009f);
+  m_kernel_size_range = std::make_pair(32, 512);
+  m_ssao_kernelSize = 128;
 }
 
 Scene::~Scene()
@@ -344,6 +345,7 @@ void Scene::initialize()
   setSSAOBias(0);
   setSSAOKernelSize(64);
   setSSAOBlurAmount(2);
+
   //////////////////////////////////////////////////////////////////////////////
   // OpenGL Initialization /////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
@@ -372,7 +374,7 @@ void Scene::paint()
     glDisable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT);
     m_ssao_program->bind();
-    for (uint i = 0; i < 64; ++i)
+    for (uint i = 0; i < m_ssao_kernelSize; ++i)
     {
       char buffer [12];
       sprintf(buffer, "samples[%d]", i);
@@ -525,7 +527,32 @@ void Scene::setSSAOBias(int _value)
 
 void Scene::setSSAOKernelSize(int _value)
 {
-  qDebug("%d", _value);
+  qDebug("Kernel Size: %d", _value);
+
+  //////////////////////////////////////////////////////////////////////////////
+  // SSAO kernel preparation ///////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
+  std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0);
+  std::default_random_engine generator;
+  m_ssao_kernel.clear();
+  for (size_t i = 0; i < m_ssao_kernelSize; ++i)
+  {
+    QVector3D sample(
+      randomFloats(generator) * 2.0 - 1.0,
+      randomFloats(generator) * 2.0 - 1.0,
+      randomFloats(generator)
+    );
+    sample.normalize();
+    sample *= randomFloats(generator);
+    float scale = (float)i/float(m_ssao_kernelSize);
+    scale = lerp(0.1f, 1.0f, scale*scale);
+    sample *= scale;
+    m_ssao_kernel.push_back(sample);
+  }
+
+  m_ssao_program->bind();
+  m_ssao_program->setUniformValue("kernelSize", _value);
+  m_ssao_program->release();
 
 }
 

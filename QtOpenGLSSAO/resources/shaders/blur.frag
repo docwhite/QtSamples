@@ -12,12 +12,19 @@ void main() {
     vec2 texelSize = 1.0 / vec2(textureSize(tInputSSAO, 0));
     float result = 0.0;
 
-    for (int x = -blurAmount; x < blurAmount; ++x)
-    {
-        for (int y = -blurAmount; y < blurAmount; ++y) {
-            vec2 offset = vec2(float(x), float(y)) * texelSize;
-            result += texture(tInputSSAO, vTexCoords + offset).r;
+    if (blurAmount > 1) {
+        for (int x = -blurAmount; x < blurAmount; ++x)
+        {
+            for (int y = -blurAmount; y < blurAmount; ++y) {
+                vec2 offset = vec2(float(x), float(y)) * texelSize;
+                result += texture(tInputSSAO, vTexCoords + offset).r;
+            }
         }
+        result /= float(blurAmount*blurAmount*blurAmount*blurAmount);
+    } else {
+        result += texture(tInputSSAO, vTexCoords).r;
     }
-    fColor = result / float(blurAmount*blurAmount*blurAmount*blurAmount);
+
+
+    fColor = result;
 }

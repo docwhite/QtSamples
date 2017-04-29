@@ -8,13 +8,13 @@ uniform sampler2D tPosition;
 uniform sampler2D tNormal;
 uniform sampler2D tTexNoise;
 
-uniform vec3 samples[64];
+uniform vec3 samples[256];
 uniform mat4 P;
 
 uniform float radius;
 uniform float bias;
 
-int kernelSize = 64;
+uniform int kernelSize;
 
 const vec2 noiseScale = vec2(720.0/4.0, 720.0/4.0); 
 

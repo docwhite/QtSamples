@@ -15,7 +15,7 @@ Panel::Panel(QWidget *parent) : QWidget(parent)
 
   QLabel *m_kernel_size_label = new QLabel("Kernel Size");
   m_kernel_size_slider = new QSlider(Qt::Horizontal);
-  m_kernel_size_slider->setRange(32, 96);
+  m_kernel_size_slider->setRange(32, 512);
   m_kernel_size_slider->setValue(64);
 
   QLabel *m_bias_label = new QLabel("Bias");
@@ -23,7 +23,7 @@ Panel::Panel(QWidget *parent) : QWidget(parent)
 
   QLabel *m_blur_amount_label = new QLabel("Blur Amount");
   m_blur_amount_slider = new QSlider(Qt::Horizontal);
-  m_blur_amount_slider->setRange(2, 8);
+  m_blur_amount_slider->setRange(1, 5);
   m_blur_amount_slider->setValue(2);
 
   mainLayout->addWidget(m_radius_label);
