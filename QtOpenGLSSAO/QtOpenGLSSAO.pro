@@ -8,6 +8,12 @@ QT += core gui widgets
 CONFIG += c++11
 CONFIG -= app_bundle
 
+HEADERS += \
+    include/AbstractScene.h \
+    include/Scene.h \
+    include/Window.h \
+    include/Panel.h
+
 SOURCES += \
     src/main.cpp \
     src/AbstractScene.cpp \
@@ -15,6 +21,12 @@ SOURCES += \
     src/Window.cpp \
     src/Panel.cpp
 
+OTHER_FILES += \
+    .gitignore \
+    README.md
+
+RESOURCES += \
+    resources.qrc
 
 OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
@@ -22,17 +34,6 @@ MOC_DIR = build/moc
 INCLUDEPATH += \
     include \
     $$PWD/../3rdparty/include
-
-HEADERS += \
-    include/AbstractScene.h \
-    include/Scene.h \
-    include/Window.h \
-    include/Panel.h
-
-OTHER_FILES += \
-    .gitignore \
-    Doxyfile \
-    README.md
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
@@ -49,6 +50,3 @@ unix:!macx {
     LIBS += -L$$PWD/../3rdparty/linux/z/lib -lz
     LIBS += -L$$PWD/../3rdparty/linux/Assimp/lib -lassimp
 }
-
-RESOURCES += \
-    resources.qrc
