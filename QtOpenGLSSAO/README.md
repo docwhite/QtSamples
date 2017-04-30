@@ -1,4 +1,7 @@
 # QtOpenGLSSAO
+
+![SSAO](ssao.png)
+
 Demonstrates how to use deferred shading, texture rendering and framebuffer
 usage using Qt5's OpenGL wrapping classes to make a screen space ambient
 occlusion from geometry as described in Joey de Vries' LearnOpenGL series.
