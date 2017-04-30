@@ -13,7 +13,6 @@ out vec3 vNormal;
 
 void main() {
     vPosition = vec4(V * M * vec4(position, 1.0)).xyz;
-    vPosition.z = -vPosition.z;
     mat3 normalMatrix = transpose(inverse(mat3(V * M)));
     vNormal = normalMatrix * (normal);
     gl_Position = P * V * M * vec4(position, 1.0);
