@@ -11,17 +11,16 @@ uniform sampler2D tTexNoise;
 uniform vec3 samples[96];
 uniform mat4 P;
 
+uniform int kernelSize;
 uniform float radius;
 uniform float bias;
-
-uniform int kernelSize;
 
 const vec2 noiseScale = vec2(720.0/4.0, 720.0/4.0); 
 
 void main() {
     // Get the needed inputs
     vec3 position = texture(tPosition, vTexCoords).rgb;
-    vec3 normal = texture(tNormal, vTexCoords).rgb;
+    vec3 normal = normalize(texture(tNormal, vTexCoords).rgb);
     vec3 randomVector = normalize(texture(tTexNoise, vTexCoords * noiseScale).xyz);
 
     // TBN change-of-basis matrix: Change from tangent-space to view-space

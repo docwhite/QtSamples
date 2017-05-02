@@ -15,6 +15,7 @@
 
 // Standard
 #include <random>
+#include <string>
 
 // Project
 #include "Scene.h"
@@ -172,29 +173,31 @@ void Scene::initialize()
   m_position_texture->setSize(720, 720);
   m_position_texture->setMinificationFilter(QOpenGLTexture::Nearest);
   m_position_texture->setMagnificationFilter(QOpenGLTexture::Nearest);
-  m_position_texture->setFormat(QOpenGLTexture::RGB16_UNorm);
-  m_position_texture->allocateStorage(QOpenGLTexture::RGB, QOpenGLTexture::Float32);
+  m_position_texture->setWrapMode(QOpenGLTexture::ClampToEdge);
+  m_position_texture->setFormat(QOpenGLTexture::RGB16F);
+  m_position_texture->allocateStorage(QOpenGLTexture::RGB, QOpenGLTexture::Float16);
 
   m_normal_texture = new QOpenGLTexture(QOpenGLTexture::Target2D);
   m_normal_texture->setSize(720, 720);
   m_normal_texture->setMinificationFilter(QOpenGLTexture::Nearest);
   m_normal_texture->setMagnificationFilter(QOpenGLTexture::Nearest);
-  m_normal_texture->setFormat(QOpenGLTexture::RGB16_UNorm);
-  m_normal_texture->allocateStorage(QOpenGLTexture::RGB, QOpenGLTexture::Float32);
+  m_normal_texture->setFormat(QOpenGLTexture::RGB16F);
+  m_normal_texture->allocateStorage(QOpenGLTexture::RGB, QOpenGLTexture::Float16);
 
   m_occlusion_texture = new QOpenGLTexture(QOpenGLTexture::Target2D);
   m_occlusion_texture->setSize(720, 720);
   m_occlusion_texture->setMinificationFilter(QOpenGLTexture::Nearest);
   m_occlusion_texture->setMagnificationFilter(QOpenGLTexture::Nearest);
-  m_occlusion_texture->setFormat(QOpenGLTexture::RGB8_UNorm);
-  m_occlusion_texture->allocateStorage(QOpenGLTexture::Red, QOpenGLTexture::Float32);
+  m_occlusion_texture->setFormat(QOpenGLTexture::R16_UNorm);
+  m_occlusion_texture->allocateStorage(QOpenGLTexture::Red, QOpenGLTexture::Float16);
 
   m_blurred_occlusion_texture = new QOpenGLTexture(QOpenGLTexture::Target2D);
   m_blurred_occlusion_texture->setSize(720, 720);
   m_blurred_occlusion_texture->setMinificationFilter(QOpenGLTexture::Nearest);
   m_blurred_occlusion_texture->setMagnificationFilter(QOpenGLTexture::Nearest);
-  m_blurred_occlusion_texture->setFormat(QOpenGLTexture::RGB8_UNorm);
-  m_blurred_occlusion_texture->allocateStorage(QOpenGLTexture::Red, QOpenGLTexture::Float32);
+  m_blurred_occlusion_texture->setWrapMode(QOpenGLTexture::ClampToEdge);
+  m_blurred_occlusion_texture->setFormat(QOpenGLTexture::R16_UNorm);
+  m_blurred_occlusion_texture->allocateStorage(QOpenGLTexture::Red, QOpenGLTexture::Float16);
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -300,7 +303,7 @@ void Scene::initialize()
     float scale = (float)i/64.0;
     scale = lerp(0.1f, 1.0f, scale*scale);
     sample *= scale;
-    m_ssao_kernel.push_back(sample);
+   m_ssao_kernel.push_back(sample);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -322,9 +325,9 @@ void Scene::initialize()
   m_noiseTexture->setMagnificationFilter(QOpenGLTexture::Nearest);
   m_noiseTexture->setWrapMode(QOpenGLTexture::Repeat);
   m_noiseTexture->setSize(4,4);
-  m_noiseTexture->setFormat(QOpenGLTexture::RGB16F);
+  m_noiseTexture->setFormat(QOpenGLTexture::RGB32F);
   m_noiseTexture->allocateStorage();
-  m_noiseTexture->setData(0, QOpenGLTexture::RGB, QOpenGLTexture::Float16, &ssaoNoise[0]);
+  m_noiseTexture->setData(0, QOpenGLTexture::RGB, QOpenGLTexture::Float32, &ssaoNoise[0]);
 
   //////////////////////////////////////////////////////////////////////////////
   // Shader configuration /// //////////////////////////////////////////////////
@@ -381,9 +384,9 @@ void Scene::paint()
     m_ssao_program->bind();
     for (uint i = 0; i < 64; ++i)
     {
-      char buffer [12];
-      sprintf(buffer, "samples[%d]", i);
-      m_ssao_program->setUniformValue(buffer, m_ssao_kernel[i]);
+      std::string s;
+      s = "samples["+std::to_string(i)+"]";
+      m_ssao_program->setUniformValue(s.c_str(), m_ssao_kernel[i]);
     }
     m_ssao_program->setUniformValue("P", m_P);
     glActiveTexture(GL_TEXTURE0);
