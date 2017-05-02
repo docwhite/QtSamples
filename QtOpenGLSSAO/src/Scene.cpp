@@ -390,6 +390,8 @@ void Scene::paint()
     glBindTexture(GL_TEXTURE_2D, m_position_texture->textureId());
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, m_normal_texture->textureId());
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, m_noiseTexture->textureId());
     m_quad_vao->bind();
       glDrawArrays(GL_TRIANGLES, 0, 6);
     m_quad_vao->release();
